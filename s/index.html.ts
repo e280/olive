@@ -25,13 +25,18 @@ export default ssg.page(import.meta.url, async orb => ({
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
+		<meta content="app-version" value="${orb.packageVersion()}"/>
 	`,
 
 	body: html`
-		<img class=logo src="/assets/olive.png" alt=""/>
-		<h1>Olive Support</h1>
-		<p>Cheap, good, customer support.</p>
-		<p class=version>v${orb.packageVersion()}</p>
+		<olive-app>
+			<section>
+				<img class=logo src="/assets/olive.png" alt=""/>
+				<h1>Olive Support</h1>
+				<p>Simple secure customer support.</p>
+				<p class=version>v${orb.packageVersion()}</p>
+			</section>
+		</olive-app>
 	`,
 }))
 
