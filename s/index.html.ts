@@ -4,7 +4,7 @@ import {ssg, html} from "@e280/scute"
 const title = "Olive Support"
 const domain = "olive.e280.org"
 const favicon = "/assets/olive.png"
-const description = "Customer support, but it's good."
+const description = "Customer support, but it's good"
 
 export default ssg.page(import.meta.url, async orb => ({
 	title,
@@ -16,7 +16,7 @@ export default ssg.page(import.meta.url, async orb => ({
 	socialCard: {
 		title,
 		description,
-		themeColor: "#636B2F",
+		themeColor: "#A1C33F",
 		siteName: domain,
 		image: `https://${domain}${favicon}`,
 	},
@@ -33,7 +33,7 @@ export default ssg.page(import.meta.url, async orb => ({
 			<section>
 				<img class=logo src="/assets/olive.png" alt=""/>
 				<h1>Olive Support</h1>
-				<p>Simple secure customer support.</p>
+				<p>Customer support, but less terrible</p>
 				<p class=version>v${orb.packageVersion()}</p>
 			</section>
 		</olive-app>

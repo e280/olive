@@ -6,6 +6,7 @@ import {Router} from "../router.js"
 import styleCss from "./style.css.js"
 import {Context} from "../context.js"
 import themeCss from "../theme.css.js"
+import {Taglines} from "./utils/taglines.js"
 import menu2Svg from "../icons/tabler/menu-2.svg.js"
 import {DashboardView} from "../pages/dashboard/view.js"
 
@@ -15,19 +16,27 @@ export class OliveApp extends (view.component(use => {
 	const context = use.once(() => new Context())
 	const router = use.once(() => new Router(
 		[/^$/, () => DashboardView.props(context).children(html`<slot></slot>`).render()],
-		[/^#\/a\/$/, () => html`account`],
-		[/^#\/o\/$/, () => html`orglist`],
-		[/^#\/o\/(\w+)$/, orgId => html`org ${orgId}`],
-		[/^#\/c\/$/, () => html`chatlist`],
-		[/^#\/c\/(\w+)$/, chatId => html`chat ${chatId}`],
+		[/^#\/account$/, () => html`account`],
+		[/^#\/orgs$/, () => html`orglist`],
+		[/^#\/org\/(\w+)$/, orgId => html`org ${orgId}`],
+		[/^#\/chats$/, () => html`chatlist`],
+		[/^#\/chat\/(\w+)$/, chatId => html`chat ${chatId}`],
 		[/.*/, () => html`404 not found`],
 	))
 
 	const {hash} = router
 	const $navOpen = use.signal(false)
+	const taglines = use.once(() => new Taglines())
 
-	const toggleNav = () => $navOpen(!$navOpen())
-	const closeNav = () => $navOpen(false)
+	const toggleNav = async(force?: boolean) => {
+		const value = force === undefined
+			? !$navOpen()
+			: force
+		if (value) await taglines.nextTagline()
+		await $navOpen(value)
+	}
+
+	const closeNav = () => toggleNav(false)
 
 	const renderLink = (label: string, url: string, isActive: boolean) => html`
 		<a
@@ -40,20 +49,23 @@ export class OliveApp extends (view.component(use => {
 
 	return html`
 		<nav ?data-open="${$navOpen()}">
-			<button theme=icon @click="${toggleNav}">${menu2Svg}</button>
+			<button theme=icon @click="${() => toggleNav()}">${menu2Svg}</button>
 			<div class=navplate ?inert="${!$navOpen()}">
 				<header>
 					<img alt="" src="/assets/olive.png"/>
 					<div>
-						<h1>Olive Support <small>v${context.version}</small></h1>
-						<p>Simple secure customer support.</p>
+						<h1>
+							<strong>Olive Support</strong>
+							<small>v${context.version}</small>
+						</h1>
+						<p>${taglines.$tagline()}</p>
 					</div>
 				</header>
 				<div class=links>
-					${renderLink("Dashboard", "#/", hash === "")}
-					${renderLink("Account", "#/a/", hash.startsWith("#/a/"))}
-					${renderLink("Orgs", "#/o/", hash.startsWith("#/a/"))}
-					${renderLink("Chats", "#/c/", hash.startsWith("#/c/"))}
+					${renderLink("🫒 Dashboard", "#/", hash === "")}
+					${renderLink("👤 Account", "#/account", hash.startsWith("#/account"))}
+					${renderLink("🏛 Orgs", "#/orgs", hash.startsWith("#/orgs"))}
+					${renderLink("💬 Chats", "#/chats", hash.startsWith("#/chats"))}
 				</div>
 			</div>
 		</nav>
