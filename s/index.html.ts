@@ -11,7 +11,6 @@ export default ssg.page(import.meta.url, async orb => ({
 	js: "main.bundle.min.js",
 	css: "main.css",
 	dark: true,
-	favicon,
 
 	socialCard: {
 		title,
@@ -22,6 +21,7 @@ export default ssg.page(import.meta.url, async orb => ({
 	},
 
 	head: html`
+		<link rel="icon" href="${favicon}">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@ export default ssg.page(import.meta.url, async orb => ({
 	body: html`
 		<olive-app>
 			<section>
-				<img class=logo src="/assets/olive.png" alt=""/>
+				<img class=logo src="${favicon}" alt=""/>
 				<h1>Olive Support</h1>
 				<p>Customer support, but less terrible</p>
 				<p class=version>v${orb.packageVersion()}</p>
