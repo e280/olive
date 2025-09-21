@@ -1,0 +1,82 @@
+
+@layer vars, core, basics, page;
+
+@layer vars {
+	:root {
+		color-scheme: dark;
+		--link: cyan;
+		--prime: #A1C33F;
+		--bg: #35391C;
+		--bg: #313422;
+	}
+}
+
+@layer core {
+	* {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	::-webkit-scrollbar { width: 4px; }
+	::-webkit-scrollbar-track { background: transparent; }
+	::-webkit-scrollbar-thumb { background: #333; border-radius: 1em; }
+	::-webkit-scrollbar-thumb:hover { background: #444; }
+
+	a {
+		color: var(--link);
+		text-decoration: none;
+
+		&:visited {
+			color: color-mix(in srgb, var(--link), purple 30%);
+		}
+
+		&:hover {
+			color: color-mix(in srgb, var(--link), white 10%);
+			text-decoration: underline;
+		}
+
+		&:active {
+			color: color-mix(in srgb, var(--link), white 50%);
+		}
+	}
+}
+
+@layer basics {
+	html { height: 100%; }
+	body { min-height: 100%; }
+	html {
+		font-family: "Alan Sans", sans-serif;
+		font-size: 16px;
+		color: var(--prime);
+		background: var(--bg);
+	}
+}
+
+@layer page {
+	body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		max-width: 32em;
+		margin: auto;
+		padding: 2em 0;
+		gap: 1em;
+		text-shadow: 0.1em 0.1em 0.2em #0008;
+	}
+
+	.logo {
+		width: 12em;
+		max-width: 100%;
+		filter: drop-shadow(0.1em 0.1em 0.2em #0004);
+	}
+
+	h1 {
+		font-size: 3em;
+		text-shadow: 0 0 0.5em color-mix(in lch, var(--prime), #fff4 80%);
+	}
+
+	p { font-size: 1.5em; }
+	.version { color: #fe0; }
+}
+
