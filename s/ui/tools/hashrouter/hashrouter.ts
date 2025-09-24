@@ -1,7 +1,9 @@
 
+import {Content} from "@e280/sly"
 import {disposer} from "@e280/stz"
 import {signal} from "@e280/strata"
-import {getNormalizedWindowHash, Hashnav, makeNavigation, onHashChange, ResolvedRoute, resolveRoute, Routes, setWindowHash} from "./sketch.js"
+import {Hashnav, ResolvedRoute, Routes} from "./plumbing/types.js"
+import {getNormalizedWindowHash, makeNavigation, onHashChange, resolveRoute, setWindowHash} from "./plumbing/primitives.js"
 
 export class Hashrouter<R extends Routes> {
 	static async setup<R extends Routes>(routes: R) {
@@ -41,7 +43,7 @@ export class Hashrouter<R extends Routes> {
 		return this.#getHash()
 	}
 
-	get content() {
+	get content(): Content | null {
 		return this.$resolved.value?.op.value ?? null
 	}
 
