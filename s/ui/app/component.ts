@@ -1,6 +1,6 @@
 
 import {html} from "lit"
-import {view} from "@e280/sly"
+import {spa, view} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {Context} from "../context.js"
@@ -13,34 +13,23 @@ export class OliveApp extends (view.component(use => {
 	use.css(themeCss, styleCss)
 
 	const context = use.once(() => new Context())
-	// const router = use.once(() => new Hashrouter({
-	// 	dashboard: new Route(
-	// 		[],
-	// 		async() => DashboardView.props(context).children(html`<slot></slot>`).render(),
-	// 	),
-	// 	account: new Route(
-	// 		["account"],
-	// 		async() => html`account`,
-	// 	),
-	// 	orgs: new Route(
-	// 		["orgs"],
-	// 		async() => html`orgs`,
-	// 	),
-	// 	org: new Route(
-	// 		["orgs", {}],
-	// 		async(orgId: string) => html`org ${orgId}`,
-	// 	),
-	// 	chats: new Route(
-	// 		["chats"],
-	// 		async() => html`chats`,
-	// 	),
-	// 	chat: new Route(
-	// 		["chat", {}],
-	// 		async(chatId: string) => html`chat ${chatId}`,
-	// 	),
-	// }))
 
-	// const {hash} = router
+	const router = use.once(() => new spa.Router({
+		routes: {
+			dashboard: spa.route("#/", async() =>
+				DashboardView
+					.props(context)
+					.children(html`<slot></slot>`)
+					.render()
+			),
+			account: spa.route("#/account", async() => html`account`),
+			orgs: spa.route("#/orgs", async() => html`orgs`),
+			org: spa.route("#/org/{orgId}", async({orgId}) => html`org ${orgId}`),
+			chats: spa.route("#/chats", async() => html`chats`),
+			chat: spa.route("#/chat/{chatId}", async({chatId}) => html`chat ${chatId}`),
+		},
+	}))
+
 	const $navOpen = use.signal(false)
 	const taglines = use.once(() => new Taglines())
 
@@ -54,21 +43,19 @@ export class OliveApp extends (view.component(use => {
 
 	const closeNav = () => toggleNav(false)
 
-	const renderLink = (label: string, url: string, isActive: boolean) => html`
+	const renderLink = <N extends spa.Navigable>(
+			label: string,
+			nav: N,
+			...params: Parameters<N["hash"]>
+		) => html`
 		<a
-			href="${url}"
-			?data-active="${isActive}"
+			href="${nav.hash(...params)}"
+			?data-active="${nav.active}"
 			@click="${closeNav}">
 				${label}
 		</a>
 	`
 
-				// <div class=links>
-				// 	${renderLink("🫒 Dashboard", "#/", hash === "")}
-				// 	${renderLink("👤 Account", "#/account", hash.startsWith("#/account"))}
-				// 	${renderLink("🏛 Orgs", "#/orgs", hash.startsWith("#/orgs"))}
-				// 	${renderLink("💬 Chats", "#/chats", hash.startsWith("#/chats"))}
-				// </div>
 	return html`
 		<nav ?data-open="${$navOpen()}">
 			<button theme=icon @click="${() => toggleNav()}">${menu2Svg}</button>
@@ -83,10 +70,16 @@ export class OliveApp extends (view.component(use => {
 						<p>${taglines.$tagline()}</p>
 					</div>
 				</header>
+				<div class=links>
+					${renderLink("🫒 Dashboard", router.nav.dashboard)}
+					${renderLink("👤 Account", router.nav.account)}
+					${renderLink("🏛 Orgs", router.nav.orgs)}
+					${renderLink("💬 Chats", router.nav.chats)}
+				</div>
 			</div>
 		</nav>
 
-		<main>${"404 not found"}</main>
+		<main>${router.render()}</main>
 
 		<div class=blanket
 			?inert="${!$navOpen()}"

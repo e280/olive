@@ -108,6 +108,15 @@ main {
 	padding-top: 4em;
 	height: 100%;
 	overflow-y: auto;
+
+	[view="loading"] {
+		font-size: 5em;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+	}
 }
 
 .blanket {
