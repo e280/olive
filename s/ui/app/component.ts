@@ -46,7 +46,7 @@ export class OliveApp extends (view.component(use => {
 	const renderLink = <N extends spa.Navigable>(
 			label: string,
 			nav: N,
-			...params: Parameters<N["hash"]>
+			...params: spa.Params<N>
 		) => html`
 		<a
 			href="${nav.hash(...params)}"
